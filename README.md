@@ -276,3 +276,50 @@ Estado actual:
 - Pendiente mostrar datos reales del usuario. 
 - Pendiente mostrar estadísticas como cantidad de rutinas y peso total levantado.
 
+## MEJORANDO CON IA LAS INTERFACES DE LAS VISTAS 
+
+### PROMPT1: Mejora Visual de LoginScreen.kt 
+```text
+Mejora visualmente el LoginScreen de esta app Android con Jetpack Compose. 
+Agrega un ícono de gimnasio o fitness en la parte superior, usa gradiente 
+de fondo oscuro con colores azul/negro, campos de texto con estilo moderno 
+(bordes redondeados, íconos de usuario y candado), botón con gradiente, 
+y animación de entrada con fadeIn. Mantén toda la lógica existente.
+```
+
+### PROMPT2: Mejora Visual de MenuPrincipalScreen:
+```text
+Para MenuPrincipalScreen:
+Mejora visualmente el MenuPrincipalScreen con Jetpack Compose. 
+Las Cards del dashboard deben tener íconos grandes, colores diferentes 
+para cada una (azul, verde, naranja), sombra elevada, y efecto al presionar. 
+El Drawer debe tener header con avatar placeholder y nombre del usuario. 
+Mantén toda la lógica de navegación existente.
+```
+
+### PROMPT3: Mejora Visual de ListaRutinasScreen:
+```text
+Para ListaRutinasScreen:
+Mejora visualmente el ListaRutinasScreen. Cada Card de rutina debe mostrar 
+un ícono de ejercicio, chips con series/repeticiones/peso con colores, 
+y animación al eliminar. Si la lista está vacía muestra un mensaje ilustrado 
+de "Sin rutinas aún". Mantén la lógica de delete con AlertDialog y el FAB.
+```
+
+### PROMPT4: Mejora Visual de AgregarRutinaScreen y DetalleRutinaScreen:
+```text
+Para AgregarRutinaScreen y DetalleRutinaScreen:
+Mejora visualmente el formulario AgregarRutinaScreen/DetalleRutinaScreen. 
+Usa secciones separadas por títulos, íconos en cada OutlinedTextField, 
+colores de acento en el botón guardar, y un indicador visual de progreso 
+o validación en tiempo real. Mantén toda la lógica Room existente.
+```
+
+### PROMPT5: Mejora Visual de PerfilUsuarioScreen:
+```text
+Para PerfilUsuarioScreen:
+Mejora visualmente el PerfilUsuarioScreen. Agrega un avatar circular con 
+iniciales del usuario, tarjetas de estadísticas con íconos y colores 
+(total rutinas en azul, volumen en verde), y una sección de logros básicos. 
+El botón de cerrar sesión debe ser rojo con ícono. Mantén la lógica existente.
+```
