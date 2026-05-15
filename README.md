@@ -1,5 +1,9 @@
 
 # GymTracker Pro
+Integrantes: 
+
+- Jeronimo Ortiz 
+- Jason Gomez
 
 ## Descripción del proyecto
 
