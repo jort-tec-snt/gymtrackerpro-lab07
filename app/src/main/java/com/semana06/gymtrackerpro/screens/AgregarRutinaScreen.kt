@@ -17,11 +17,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import com.semana06.gymtrackerpro.data.AppDatabase
+import com.semana06.gymtrackerpro.data.Rutina
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 @Composable
 fun AgregarRutinaScreen(
     navController: NavController,
     usuarioId: Int
 ) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val scope = rememberCoroutineScope()
+
     val ejercicio = remember { mutableStateOf("") }
     val grupoMuscular = remember { mutableStateOf("") }
     val series = remember { mutableStateOf("") }
@@ -84,7 +97,26 @@ fun AgregarRutinaScreen(
                 )
 
                 Button(
-                    onClick = { navController.popBackStack() },
+                    onClick = {
+                        scope.launch {
+                            val nuevaRutina = Rutina(
+                                usuarioId = usuarioId,
+                                ejercicio = ejercicio.value,
+                                grupoMuscular = grupoMuscular.value,
+                                series = series.value.toIntOrNull() ?: 0,
+                                repeticiones = repeticiones.value.toIntOrNull() ?: 0,
+                                pesoKg = pesoKg.value.toDoubleOrNull() ?: 0.0,
+                                fecha = if (fecha.value.isEmpty()) {
+                                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                                } else {
+                                    fecha.value
+                                }
+                            )
+                            db.rutinaDao().insertarRutina(nuevaRutina)
+                            navController.popBackStack()
+                        }
+                    },
+                    enabled = ejercicio.value.isNotEmpty() && grupoMuscular.value.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 ) {
                     Text("Guardar Rutina")

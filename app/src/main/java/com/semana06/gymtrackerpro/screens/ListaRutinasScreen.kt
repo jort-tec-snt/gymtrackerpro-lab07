@@ -1,63 +1,94 @@
 package com.semana06.gymtrackerpro.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.semana06.gymtrackerpro.data.AppDatabase
+import com.semana06.gymtrackerpro.data.Rutina
 
 @Composable
 fun ListaRutinasScreen(
     navController: NavController,
     usuarioId: Int
 ) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    var rutinas by remember { mutableStateOf(listOf<Rutina>()) }
+
+    LaunchedEffect(Unit) {
+        rutinas = db.rutinaDao().listarPorUsuario(usuarioId)
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
     ) {
-        Text("Lista de Rutinas - Usuario ID: $usuarioId")
+        Text(
+            text = "Mis Rutinas",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+        if (rutinas.isEmpty()) {
+            Box(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-                Text("Rutina de prueba")
-                Text("Ejercicio: Press banca")
-                Text("Series: 4")
-                Text("Repeticiones: 10")
-                Text("Peso: 50 kg")
+                Text("No tienes rutinas registradas")
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(rutinas) { rutina ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(text = rutina.ejercicio, style = MaterialTheme.typography.titleLarge)
+                            Text(text = "Grupo: ${rutina.grupoMuscular}")
+                            Text(text = "Series: ${rutina.series} | Reps: ${rutina.repeticiones}")
+                            Text(text = "Peso: ${rutina.pesoKg} kg")
+                            Text(text = "Fecha: ${rutina.fecha}", style = MaterialTheme.typography.bodySmall)
 
-                Button(
-                    onClick = { navController.navigate("detalle_rutina/1") },
-                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
-                ) {
-                    Text("Editar Rutina")
+                            Button(
+                                onClick = { navController.navigate("detalle_rutina/${rutina.id}") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp)
+                            ) {
+                                Text("Ver Detalle / Editar")
+                            }
+                        }
+                    }
                 }
             }
         }
 
         Button(
             onClick = { navController.navigate("agregar_rutina/$usuarioId") },
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         ) {
-            Text("Agregar Rutina")
+            Text("Agregar Nueva Rutina")
         }
 
         TextButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Volver")
+            Text("Volver al Menú")
         }
     }
 }

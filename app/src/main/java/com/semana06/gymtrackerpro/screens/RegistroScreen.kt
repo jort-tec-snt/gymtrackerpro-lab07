@@ -24,10 +24,23 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import com.semana06.gymtrackerpro.data.AppDatabase
+import com.semana06.gymtrackerpro.data.Usuario
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 @Composable
 fun RegistroScreen(
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val scope = rememberCoroutineScope()
+
     val nombreUsuario = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val mostrarPassword = remember { mutableStateOf(false) }
@@ -114,10 +127,23 @@ fun RegistroScreen(
                 Button(
                     onClick = {
                         if (password.value.length >= 8) {
-                            navController.popBackStack()
+                            scope.launch {
+                                val nuevoUsuario = Usuario(
+                                    nombreUsuario = nombreUsuario.value,
+                                    password = password.value,
+                                    nombreCompleto = nombreCompleto.value,
+                                    email = email.value,
+                                    edad = edad.value.toIntOrNull() ?: 0,
+                                    fechaRegistro = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                                )
+                                db.usuarioDao().insertarUsuario(nuevoUsuario)
+                                navController.popBackStack()
+                            }
                         }
                     },
-                    enabled = password.value.length >= 8,
+                    enabled = password.value.length >= 8 && 
+                             nombreUsuario.value.isNotEmpty() && 
+                             nombreCompleto.value.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
